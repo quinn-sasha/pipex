@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 13:54:19 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/14 09:30:15 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/14 10:37:40 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ char	*ft_substr(char const *s, int start, int last);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
+void	*free_words(char **words);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
@@ -67,4 +68,4 @@ void	ft_putnbr_fd(int n, int fd);
 // get_next_line
 char	*get_next_line(int fd);
 
-#endif
+# endif

@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 18:41:36 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/06 16:31:54 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/14 10:34:28 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	count_words(char const *s, char c)
 	return (result);
 }
 
-static void	*free_words(char **words)
+void	*free_words(char **words)
 {
 	int	i;
 
