@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/15 09:35:48 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/15 09:45:05 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,10 @@ int main(int argc, char *argv[], char *environ[]) {
     set_pipe_and_execute(argv[command_index], environ);
     command_index++;
   }
+  int output_fd = open(argv[argc - 1], O_CREAT, O_WRONLY, O_TRUNC);
+  if (output_fd == FAILED)
+    handle_error(argv[argc - 1]);
+  dup2(output_fd, STDOUT_FILENO);
+  close(output_fd);
+  exit(EXIT_SUCCESS);
 }
