@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/15 10:59:49 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/15 15:21:44 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 // Error messages
 # define USAGE "Error: ./pipex input_file cmd1 cmd2 output_file"
 # define COMMAND_NOT_FOUND "Error: command not found"
+# define PIPE_ERROR "Error: pipe() failed"
+# define FORK_ERROR "Error: fork() failed"
 
 void handle_error(char *message, int is_customized_message);
 
