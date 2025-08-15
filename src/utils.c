@@ -12,8 +12,8 @@
 
 #include "../include/pipex.h"
 
-void handle_error(char *message) {
-  if (errno < 1)
+void handle_error(char *message, int is_customized_message) {
+  if (is_customized_message)
     ft_putendl_fd(message, STDERR_FILENO);
   else
     perror("Error");
