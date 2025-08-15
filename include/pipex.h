@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/15 15:21:44 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/15 15:50:39 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@
 # define PIPE_ERROR "Error: pipe() failed"
 # define FORK_ERROR "Error: fork() failed"
 
+char *find_path(char *command, char *environ[]);
+void execute(char *command_and_args, char *environ[]);
+void set_pipe_and_execute(char *command_and_args, char *environ[]);
 void handle_error(char *message, int is_customized_message);
 
 #endif
