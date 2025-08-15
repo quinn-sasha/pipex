@@ -6,11 +6,15 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/15 09:45:05 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/15 09:53:25 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+void execute(char *command_and_args, char *environ[]) {
+
+}
 
 void set_pipe_and_execute(char *command_and_args, char *environ[]) {
 
@@ -37,5 +41,5 @@ int main(int argc, char *argv[], char *environ[]) {
     handle_error(argv[argc - 1]);
   dup2(output_fd, STDOUT_FILENO);
   close(output_fd);
-  exit(EXIT_SUCCESS);
+  execute(argv[command_index], environ);
 }
