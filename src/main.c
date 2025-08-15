@@ -6,14 +6,26 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/15 09:53:25 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/15 11:15:30 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void execute(char *command_and_args, char *environ[]) {
+char *find_path(char *command, char *environ[]);
 
+void execute(char *command_and_args, char *environ[]) {
+  char **argv = ft_split(command_and_args, ' ');
+  char *path = find_path(argv[0], environ);
+  if (path == NULL) {
+    free_words(argv);
+    handle_error(COMMAND_NOT_FOUND, TRUE);
+  }
+  execve(path, argv, environ);
+  free_words(argv);
+  free(path);
+  // TODO: better error message needed
+  handle_error("execve", FALSE);
 }
 
 void set_pipe_and_execute(char *command_and_args, char *environ[]) {
@@ -22,11 +34,11 @@ void set_pipe_and_execute(char *command_and_args, char *environ[]) {
 
 int main(int argc, char *argv[], char *environ[]) {
   if (argc < MINIMUM_ARGS)
-    handle_error(USAGE);
+    handle_error(USAGE, TRUE);
 
   int input_fd = open(argv[1], O_RDONLY);
   if (input_fd == FAILED)
-    handle_error(argv[1]);
+    handle_error(argv[1], FALSE);
   dup2(input_fd, STDIN_FILENO);
   close(input_fd);
 
@@ -38,7 +50,7 @@ int main(int argc, char *argv[], char *environ[]) {
   }
   int output_fd = open(argv[argc - 1], O_CREAT, O_WRONLY, O_TRUNC);
   if (output_fd == FAILED)
-    handle_error(argv[argc - 1]);
+    handle_error(argv[argc - 1], FALSE);
   dup2(output_fd, STDOUT_FILENO);
   close(output_fd);
   execute(argv[command_index], environ);
