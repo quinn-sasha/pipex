@@ -6,12 +6,15 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/15 09:18:26 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/15 09:35:48 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
+void set_pipe_and_execute(char *command_and_args, char *environ[]) {
+
+}
 
 int main(int argc, char *argv[], char *environ[]) {
   if (argc < MINIMUM_ARGS)
@@ -23,4 +26,10 @@ int main(int argc, char *argv[], char *environ[]) {
   dup2(input_fd, STDIN_FILENO);
   close(input_fd);
 
+  int command_index = 2;
+  int last_command = argc - 2;
+  while (command_index < last_command) {
+    set_pipe_and_execute(argv[command_index], environ);
+    command_index++;
+  }
 }
