@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 15:23:44 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 15:37:06 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char *find_path(char *command, char *environ[]) {
     i++;
   }
   char **paths = ft_split(environ[i] + ft_strlen("PATH="), ':');
-  int i = 0;
+  i = 0;
   while (paths[i]) {
     char *dir_path = ft_strjoin(paths[i], "/");
     char *path = ft_strjoin(dir_path, command);
