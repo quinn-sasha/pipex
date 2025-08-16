@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 13:54:08 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 14:32:56 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,14 @@ char *find_path(char *command, char *environ[]) {
   return NULL;
 }
 
-void execute(char *command_and_args, char *environ[]) {
+void execute(char *command_and_args, char *environ[], pid_t **pids) {
   char **argv = ft_split(command_and_args, ' ');
   char *path = find_path(argv[0], environ);
   if (path == NULL) {
     free_words(argv);
-    handle_error(COMMAND_NOT_FOUND, TRUE);
+    handle_error_and_free(COMMAND_NOT_FOUND, TRUE, &pids);
   }
+
   execve(path, argv, environ);
   free_words(argv);
   free(path);
@@ -51,12 +52,18 @@ void execute(char *command_and_args, char *environ[]) {
   handle_error("execve", FALSE);
 }
 
-void wait_all_children(pid_t *pids, int num_commands, int *status) {
+int wait_all_children(pid_t *pids, int num_commands) {
+  int status;
   int i = 0;
   while (i < num_commands) {
-    waitpid(pids[i], status, 0);
+    waitpid(pids[i], &status, 0);
     i++;
   }
+  if WIFEXITED(status)
+    return WEXITSTATUS(status);
+  if WIFSIGNALED(status)
+    return SIGNAL_BASE_CODE + WTERMSIG(status);
+  return EXIT_FAILURE;
 }
 
 int main(int argc, char *argv[], char *environ[]) {
@@ -80,7 +87,7 @@ int main(int argc, char *argv[], char *environ[]) {
       close(pipe_fd[READ]);
       dup2(input_fd, STDIN_FILENO);
       dup2(pipe_fd[WRITE], STDOUT_FILENO);
-      execute(*command, environ);
+      execute(*command, environ, &pids);
     }
     close(pipe_fd[WRITE]);
     close(input_fd);
@@ -96,10 +103,10 @@ int main(int argc, char *argv[], char *environ[]) {
   if (pid == CHILD) {
     dup2(input_fd, STDIN_FILENO);
     dup2(output_fd, STDOUT_FILENO);
-    execute(*command, environ);
+    execute(*command, environ, &pids);
   }
-  int status;
-  wait_all_children(pids, num_commands, &status);
+  int last_status;
+  last_status = wait_all_children(pids, num_commands);
   free(pids);
   exit(status);
 }
