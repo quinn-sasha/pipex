@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 11:59:07 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 14:25:10 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 # define COMMAND_NOT_FOUND "Error: command not found"
 # define PIPE_ERROR "Error: pipe() failed"
 # define FORK_ERROR "Error: fork() failed"
+
+# define SIGNAL_BASE_CODE 128
 
 // utils.c
 void handle_error(char *message, int is_customized);
