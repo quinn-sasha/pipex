@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 14:57:30 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 15:20:56 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,11 @@ void execute(char *command_and_args, char *environ[], pid_t **pids) {
   char *path = find_path(argv[0], environ);
   if (path == NULL) {
     free_words(argv);
-    handle_error_and_free(COMMAND_NOT_FOUND, TRUE, &pids);
+    handle_error_and_free(CMD_NOT_FOUND_ERROR, TRUE, &pids, CMD_NOT_FOUND_CODE);
   }
-
+  if (access(path, X_OK) == FAILED)
+    handle_error_and_free(PERMISSON_DENIED_ERROR, TRUE, pids, PERMISSION_DENIED_CODE);
   execve(path, argv, environ);
-  free_words(argv);
-  free(path);
-  // TODO: better error message needed
-  handle_error("execve", FALSE);
 }
 
 int wait_all_children(pid_t *pids, int num_commands) {
@@ -68,10 +65,10 @@ int wait_all_children(pid_t *pids, int num_commands) {
 
 int main(int argc, char *argv[], char *environ[]) {
   if (argc < MINIMUM_ARGS)
-    handle_error(USAGE, TRUE);
+    handle_error(USAGE, TRUE, EXIT_FAILURE);
   int input_fd = open(argv[1], O_RDONLY);
   if (input_fd == FAILED)
-    handle_error(argv[1], FALSE);
+    handle_error(argv[1], FALSE, EXIT_FAILURE);
   int num_commands = argc - 3;
   pid_t *pids = malloc(num_commands);
   char **command = argv + 2;
@@ -80,7 +77,7 @@ int main(int argc, char *argv[], char *environ[]) {
   int i = 0;
   while (i < num_commands - 1) {
     if (pipe(pipe_fd) == FAILED)
-      handle_error_and_free(PIPE_ERROR, TRUE, &pids);
+      handle_error_and_free(PIPE_ERROR, TRUE, &pids, EXIT_FAILURE);
     pid_t pid = fork();
     pids[i] = pid;
     if (pid == CHILD) {
@@ -97,7 +94,7 @@ int main(int argc, char *argv[], char *environ[]) {
   }
   int output_fd = open(argv[argc - 1], O_CREAT, O_TRUNC, O_WRONLY);
   if (output_fd == FAILED)
-    handle_error_and_free(argv[argc - 1], FAILED, &pids);
+    handle_error_and_free(argv[argc - 1], FAILED, &pids, EXIT_FAILURE);
   pid_t pid = fork();
   pids[i] = pid;
   if (pid == CHILD) {
