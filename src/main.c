@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 16:16:12 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 18:42:26 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,18 @@ char *find_path(char *command, char *environ[]) {
   return NULL;
 }
 
-void execute(char *command_and_args, char *environ[], pid_t **pids) {
+// Assume command and aruments are splited by space.
+void execute(char *command_and_args, char *environ[], pid_t *pids) {
   char **argv = ft_split(command_and_args, ' ');
   char *path = find_path(argv[0], environ);
   if (path == NULL) {
     free_words(argv);
-    handle_error_and_free(CMD_NOT_FOUND_ERROR, TRUE, pids, CMD_NOT_FOUND_CODE);
+    handle_error_and_free(CMD_NOT_FOUND_ERROR, TRUE, &pids, CMD_NOT_FOUND_CODE);
   }
   if (access(path, X_OK) == FAILED) {
     free_words(argv);
     free(path);
-    handle_error_and_free(PERMISSON_DENIED_ERROR, TRUE, pids, PERMISSION_DENIED_CODE);
+    handle_error_and_free(PERMISSON_DENIED_ERROR, TRUE, &pids, PERMISSION_DENIED_CODE);
   }
   execve(path, argv, environ);
 }
@@ -74,16 +75,15 @@ int main(int argc, char *argv[], char *environ[]) {
     handle_error(argv[1], FALSE, EXIT_FAILURE);
   int num_commands = argc - 3;
   pid_t *pids = malloc(num_commands);
-  char **command = argv + 2;
+  t_program_args program_args = {argv + 2, argv[argc - 1], environ};
 
   int pipe_fd[2];
   int i = 0;
   while (i < num_commands - 1) {
     if (pipe(pipe_fd) == FAILED)
-      handle_error_and_free(PIPE_ERROR, TRUE, &pids, EXIT_FAILURE);
-    pid_t pid = fork();
-    pids[i] = pid;
-    if (pid == CHILD) {
+      handle_error_and_free(PIPE_ERROR, FALSE, &pids, EXIT_FAILURE);
+    pids[i] = fork();
+    if (pids[i] == CHILD) {
       close(pipe_fd[READ]);
       dup2(input_fd, STDIN_FILENO);
       dup2(pipe_fd[WRITE], STDOUT_FILENO);
@@ -98,14 +98,14 @@ int main(int argc, char *argv[], char *environ[]) {
   int output_fd = open(argv[argc - 1], O_CREAT | O_TRUNC | O_WRONLY);
   if (output_fd == FAILED)
     handle_error_and_free(argv[argc - 1], FAILED, &pids, EXIT_FAILURE);
-  pid_t pid = fork();
-  pids[i] = pid;
-  if (pid == CHILD) {
+  pids[i] = fork();
+  if (pids[i] == CHILD) {
     dup2(input_fd, STDIN_FILENO);
     dup2(output_fd, STDOUT_FILENO);
     execute(*command, environ, &pids);
   }
   close(input_fd);
+
   int last_status;
   last_status = wait_all_children(pids, num_commands);
   free(pids);
