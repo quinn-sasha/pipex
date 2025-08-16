@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 09:55:55 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 11:44:55 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,20 @@ void execute(char *command_and_args, char *environ[]) {
 
 
 int main(int argc, char *argv[], char *environ[]) {
+  pid_t *child_pids = NULL;
   if (argc < MINIMUM_ARGS)
-    handle_error(USAGE, TRUE);
+    handle_error(USAGE, TRUE, &child_pids);
+  int input_fd = open(argv[1], O_RDONLY);
+  if (input_fd == FAILED)
+    handle_error(argv[1], FALSE, &child_pids);
 
-
+  int num_commands = argc - 3;  // 条件分岐
+  child_pids = malloc(num_commands);
+  int command_index = 2;  // 条件分岐
+  argv += command_index;
+  while (command_index < argc - 2) {
+    int pipe_fd[2];
+    if (pipe(pipe_fd) == FAILED)
+      handle_error();
+  }
 }

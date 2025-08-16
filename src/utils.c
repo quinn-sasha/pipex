@@ -12,10 +12,11 @@
 
 #include "../include/pipex.h"
 
-void handle_error(char *message, int is_customized_message) {
+void handle_error(char *message, int is_customized_message, int **pids) {
   if (is_customized_message)
     ft_putendl_fd(message, STDERR_FILENO);
   else
     perror(message);
+  free(*pids);
   exit(EXIT_FAILURE);
 }
