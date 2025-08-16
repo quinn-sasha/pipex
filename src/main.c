@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 16:13:47 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 16:16:12 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[], char *environ[]) {
     i++;
     command++;
   }
-  int output_fd = open(argv[argc - 1], O_CREAT, O_TRUNC, O_WRONLY);
+  int output_fd = open(argv[argc - 1], O_CREAT | O_TRUNC | O_WRONLY);
   if (output_fd == FAILED)
     handle_error_and_free(argv[argc - 1], FAILED, &pids, EXIT_FAILURE);
   pid_t pid = fork();
