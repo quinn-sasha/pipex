@@ -12,19 +12,19 @@
 
 #include "../include/pipex.h"
 
-void handle_error(char *message, int is_customized) {
+void handle_error(char *message, int is_customized, int exit_status) {
   if (is_customized)
     ft_putendl_fd(message, STDERR_FILENO);
   else
     perror(message);
-  exit(EXIT_FAILURE);
+  exit(exit_status);
 }
 
-void handle_error_and_free(char *message, int is_customized, int **pids) {
+void handle_error_and_free(char *message, int is_customized, int **pids, int exit_status) {
   if (is_customized)
     ft_putendl_fd(message, STDERR_FILENO);
   else
     perror(message);
   free(*pids);
-  exit(EXIT_FAILURE);
+  exit(exit_status);
 }
