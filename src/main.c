@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 18:42:26 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/17 08:44:24 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,36 @@ void execute(char *command_and_args, char *environ[], pid_t *pids) {
   execve(path, argv, environ);
 }
 
+void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_commands, int input_fd) {
+  int pipe_fd[2];
+  int i = 0;
+  while (i < num_commands - 1) {
+    if (pipe(pipe_fd) == FAILED)
+      handle_error_and_free(PIPE_ERROR, FALSE, &pids, EXIT_FAILURE);
+    pids[i] = fork();
+    if (pids[i] == CHILD) {
+      close(pipe_fd[READ]);
+      dup2(input_fd, STDIN_FILENO);
+      dup2(pipe_fd[WRITE], STDOUT_FILENO);
+      execute(program_args.commands[i], program_args.environ, &pids);
+    }
+    close(pipe_fd[WRITE]);
+    close(input_fd);
+    input_fd = pipe_fd[READ];
+    i++;
+  }
+  int output_file_fd = open(program_args.output_file, O_CREAT | O_TRUNC | O_WRONLY);
+  if (output_file_fd == FAILED)
+    handle_error_and_free(program_args.output_file, FALSE, &pids, EXIT_FAILURE);
+  pids[i] = fork();
+  if (pids[i] == CHILD) {
+    dup2(input_fd, STDIN_FILENO);
+    dup2(output_file_fd, STDOUT_FILENO);
+    execute(program_args.commands[i], program_args.environ, &pids);
+  }
+  close(input_fd);
+}
+
 int wait_all_children(pid_t *pids, int num_commands) {
   int status;
   int i = 0;
@@ -77,35 +107,7 @@ int main(int argc, char *argv[], char *environ[]) {
   pid_t *pids = malloc(num_commands);
   t_program_args program_args = {argv + 2, argv[argc - 1], environ};
 
-  int pipe_fd[2];
-  int i = 0;
-  while (i < num_commands - 1) {
-    if (pipe(pipe_fd) == FAILED)
-      handle_error_and_free(PIPE_ERROR, FALSE, &pids, EXIT_FAILURE);
-    pids[i] = fork();
-    if (pids[i] == CHILD) {
-      close(pipe_fd[READ]);
-      dup2(input_fd, STDIN_FILENO);
-      dup2(pipe_fd[WRITE], STDOUT_FILENO);
-      execute(*command, environ, &pids);
-    }
-    close(pipe_fd[WRITE]);
-    close(input_fd);
-    input_fd = pipe_fd[READ];
-    i++;
-    command++;
-  }
-  int output_fd = open(argv[argc - 1], O_CREAT | O_TRUNC | O_WRONLY);
-  if (output_fd == FAILED)
-    handle_error_and_free(argv[argc - 1], FAILED, &pids, EXIT_FAILURE);
-  pids[i] = fork();
-  if (pids[i] == CHILD) {
-    dup2(input_fd, STDIN_FILENO);
-    dup2(output_fd, STDOUT_FILENO);
-    execute(*command, environ, &pids);
-  }
-  close(input_fd);
-
+  set_pipe_and_execute(program_args, pids, num_commands, input_fd);
   int last_status;
   last_status = wait_all_children(pids, num_commands);
   free(pids);
