@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 14:32:56 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 14:57:30 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,5 @@ int main(int argc, char *argv[], char *environ[]) {
   int last_status;
   last_status = wait_all_children(pids, num_commands);
   free(pids);
-  exit(status);
+  exit(last_status);
 }
