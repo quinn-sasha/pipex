@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 15:38:42 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 18:20:18 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define MINIMUM_ARGS 5
 
 // Error messages
-# define USAGE "Error: ./pipex input_file cmd1 cmd2 output_file"
+# define USAGE "Usage: ./pipex input_file cmd1 cmd2 output_file"
 # define CMD_NOT_FOUND_ERROR "Error: command not found"
 # define PIPE_ERROR "Error: pipe() failed"
 # define FORK_ERROR "Error: fork() failed"
@@ -37,6 +37,12 @@
 # define SIGNAL_BASE_CODE 128
 # define CMD_NOT_FOUND_CODE 127
 # define PERMISSION_DENIED_CODE 126
+
+typedef struct s_program_args {
+  char **commands;
+  char *output_file;
+  char **environ;
+} t_program_args;
 
 // utils.c
 void handle_error(char *message, int is_customized, int exit_status);
