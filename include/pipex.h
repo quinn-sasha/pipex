@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 15:34:58 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 15:38:42 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void handle_error(char *message, int is_customized, int exit_status);
 void handle_error_and_free(char *message, int is_customized, int **pids, int exit_status);
 // main.c
 char *find_path(char *command, char *environ[]);
-void execute(char *command_and_args, char *environ[]);
+void execute(char *command_and_args, char *environ[], pid_t **pids);
 int wait_all_children(pid_t *pids, int num_commands);
 
 #endif
