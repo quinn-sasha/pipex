@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/16 15:37:06 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/16 16:13:47 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int main(int argc, char *argv[], char *environ[]) {
     dup2(output_fd, STDOUT_FILENO);
     execute(*command, environ, &pids);
   }
+  close(input_fd);
   int last_status;
   last_status = wait_all_children(pids, num_commands);
   free(pids);
