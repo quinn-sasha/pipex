@@ -40,10 +40,5 @@ t_program_args new_program_args(int argc, char **argv, char **environ, int is_he
 int is_same_string(char *s1, char *s2) {
   if (ft_strlen(s1) != ft_strlen(s2))
     return FALSE;
-  size_t len;
-  if (ft_strlen(s1) < ft_strlen(s2))
-    len = ft_strlen(s1);
-  else
-    len = ft_strlen(s2);
-  return ft_strncmp(s1, s2, len) == 0;
+  return ft_strncmp(s1, s2, ft_strlen(s1)) == 0;
 }
