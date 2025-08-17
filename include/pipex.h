@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/17 10:32:00 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/17 10:37:42 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@
 # define READ 0
 # define WRITE 1
 # define MINIMUM_ARGS 5
+# define HERE_DOC_MINIMUM_ARGS 6
 
 // Error messages
 # define USAGE "Usage: ./pipex input_file cmd1 cmd2 output_file"
+# define HERE_DOC_USAGE "Usage: ./pipex here_doc DELIMITER cmd cmd1 file"
 # define CMD_NOT_FOUND_ERROR "Error: command not found"
 # define PIPE_ERROR "Error: pipe() failed"
 # define FORK_ERROR "Error: fork() failed"
