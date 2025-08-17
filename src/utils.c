@@ -28,3 +28,11 @@ void handle_error_and_free(char *message, int is_customized, pid_t **pids, int e
   free(*pids);
   exit(exit_status);
 }
+
+t_program_args new_program_args(int argc, char **argv, char **environ, int is_heredoc) {
+  t_program_args program_args;
+  program_args.commands = argv + 2 + is_heredoc;
+  program_args.environ = environ;
+  program_args.output_file = argv[argc - 1];
+  return program_args;
+}
