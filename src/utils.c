@@ -20,12 +20,12 @@ void handle_error(char *message, int is_customized, int exit_status) {
   exit(exit_status);
 }
 
-void handle_error_and_free(char *message, int is_customized, pid_t **pids, int exit_status) {
+void handle_error_and_free(char *message, int is_customized, pid_t *pids, int exit_status) {
   if (is_customized)
     ft_putendl_fd(message, STDERR_FILENO);
   else
     perror(message);
-  free(*pids);
+  free(pids);
   exit(exit_status);
 }
 
