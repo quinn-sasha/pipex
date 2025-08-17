@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/17 12:37:48 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/17 14:34:34 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ void execute(char *command_and_args, char *environ[], pid_t *pids) {
   char *path = find_path(argv[0], environ);
   if (path == NULL) {
     free_words(argv);
-    handle_error_and_free(CMD_NOT_FOUND_ERROR, TRUE, &pids, CMD_NOT_FOUND_CODE);
+    handle_error_and_free(CMD_NOT_FOUND_ERROR, TRUE, pids, CMD_NOT_FOUND_CODE);
   }
   if (access(path, X_OK) == FAILED) {
     free_words(argv);
     free(path);
-    handle_error_and_free(PERMISSON_DENIED_ERROR, TRUE, &pids, PERMISSION_DENIED_CODE);
+    handle_error_and_free(PERMISSON_DENIED_ERROR, TRUE, pids, PERMISSION_DENIED_CODE);
   }
   execve(path, argv, environ);
 }
@@ -58,7 +58,7 @@ void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_comm
   int i = 0;
   while (i < num_commands - 1) {
     if (pipe(pipe_fd) == FAILED)
-      handle_error_and_free(PIPE_ERROR, FALSE, &pids, EXIT_FAILURE);
+      handle_error_and_free(PIPE_ERROR, FALSE, pids, EXIT_FAILURE);
     pids[i] = fork();
     if (pids[i] == CHILD) {
       close(pipe_fd[READ]);
@@ -73,7 +73,7 @@ void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_comm
   }
   int output_file_fd = open(program_args.output_file, O_CREAT | O_TRUNC | O_WRONLY);
   if (output_file_fd == FAILED)
-    handle_error_and_free(program_args.output_file, FALSE, &pids, EXIT_FAILURE);
+    handle_error_and_free(program_args.output_file, FALSE, pids, EXIT_FAILURE);
   pids[i] = fork();
   if (pids[i] == CHILD) {
     dup2(input_fd, STDIN_FILENO);
@@ -97,6 +97,9 @@ int wait_all_children(pid_t *pids, int num_commands) {
   return EXIT_FAILURE;
 }
 
+// Assume delimiter is not double quatation.
+// This here document only implements environment variable, not command expansion.
+// Assume environment variable is not surrounded by {}.
 int here_document_to_input_fd(char *delimiter, int argc) {
   if (argc < HERE_DOC_MINIMUM_ARGS)
     handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
@@ -112,7 +115,7 @@ int here_document_to_input_fd(char *delimiter, int argc) {
         free(line);
         exit(EXIT_SUCCESS);
       }
-      char *expanded_line = expand_env_vars(); // TODO
+      char *expanded_line = expand_env_varialbe(line);
       free(line);
       write(pipe_fd[WRITE], expanded_line, ft_strlen(expanded_line));
       free(expanded_line);
