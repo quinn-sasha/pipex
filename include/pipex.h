@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/17 10:37:42 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/17 11:27:41 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_program_args {
 void handle_error(char *message, int is_customized, int exit_status);
 void handle_error_and_free(char *message, int is_customized, int **pids, int exit_status);
 t_program_args new_program_args(int argc, char **argv, char **environ, int is_heredoc);
+int is_same_string(char *s1, char *s2);
 // main.c
 char *find_path(char *command, char *environ[]);
 void execute(char *command_and_args, char *environ[], pid_t *pids);
