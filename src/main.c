@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/17 08:44:24 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/17 12:37:48 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,15 +97,49 @@ int wait_all_children(pid_t *pids, int num_commands) {
   return EXIT_FAILURE;
 }
 
+int here_document_to_input_fd(char *delimiter, int argc) {
+  if (argc < HERE_DOC_MINIMUM_ARGS)
+    handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
+  int pipe_fd[2];
+  if (pipe(pipe_fd) == FAILED)
+    handle_error(PIPE_ERROR, FALSE, EXIT_FAILURE);
+  pid_t pid = fork();
+  if (pid == CHILD) {
+    close(pipe_fd[READ]);
+    while (TRUE) {
+      char *line = get_next_line(STDIN_FILENO);
+      if (is_same_string(line, delimiter)) {
+        free(line);
+        exit(EXIT_SUCCESS);
+      }
+      char *expanded_line = expand_env_vars(); // TODO
+      free(line);
+      write(pipe_fd[WRITE], expanded_line, ft_strlen(expanded_line));
+      free(expanded_line);
+    }
+  }
+  close(pipe_fd[WRITE]);
+  wait(NULL);
+  return pipe_fd[READ];
+}
+
 int main(int argc, char *argv[], char *environ[]) {
   if (argc < MINIMUM_ARGS)
     handle_error(USAGE, TRUE, EXIT_FAILURE);
-  int input_fd = open(argv[1], O_RDONLY);
-  if (input_fd == FAILED)
-    handle_error(argv[1], FALSE, EXIT_FAILURE);
-  int num_commands = argc - 3;
+  int input_fd;
+  int is_heredoc = FALSE;
+  if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0) {
+    is_heredoc = TRUE;
+    input_fd = here_document_to_input_fd();
+  } else {
+    input_fd = open(argv[1], O_RDONLY);
+    if (input_fd == FAILED)
+      handle_error(argv[1], FALSE, EXIT_FAILURE);
+  }
+  int num_commands = argc - (3 + is_heredoc);
+  t_program_args program_args = new_program_args(argc, argv, environ, is_heredoc);
+  int output_fd = open_wrapper(); // TODO
   pid_t *pids = malloc(num_commands);
-  t_program_args program_args = {argv + 2, argv[argc - 1], environ};
 
   set_pipe_and_execute(program_args, pids, num_commands, input_fd);
   int last_status;
