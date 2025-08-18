@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 08:22:49 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 08:38:54 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,9 @@ int wait_all_children(pid_t *pids, int num_commands) {
   return EXIT_FAILURE;
 }
 
-// Assume delimiter is not double quatation.
-// This here document only implements environment variable, not command expansion.
-// Assume environment variable is not surrounded by {}.
-int here_document_to_input_fd(char *delimiter, int argc) {
-  if (argc < HERE_DOC_MINIMUM_ARGS)
-    handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
+// This here document does not implement environmental variable expasion
+// and commad substitution.
+int here_document_to_input_fd(char *delimiter) {
   int pipe_fd[2];
   if (pipe(pipe_fd) == FAILED)
     handle_error(PIPE_ERROR, FALSE, EXIT_FAILURE);
@@ -115,10 +112,9 @@ int here_document_to_input_fd(char *delimiter, int argc) {
         free(line);
         exit(EXIT_SUCCESS);
       }
-      char *expanded_line = expand_env_varialbe(line);
+      if (line)
+        write(pipe_fd[WRITE], line, ft_strlen(line));
       free(line);
-      write(pipe_fd[WRITE], expanded_line, ft_strlen(expanded_line));
-      free(expanded_line);
     }
   }
   close(pipe_fd[WRITE]);
@@ -133,7 +129,9 @@ int main(int argc, char *argv[], char *environ[]) {
   int is_heredoc = FALSE;
   if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0) {
     is_heredoc = TRUE;
-    input_fd = here_document_to_input_fd();
+    if (argc < HERE_DOC_MINIMUM_ARGS)
+      handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
+    input_fd = here_document_to_input_fd(argv[DELIMITER_POSITION]);
   } else {
     input_fd = open(argv[1], O_RDONLY);
     if (input_fd == FAILED)

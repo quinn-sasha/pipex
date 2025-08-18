@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/17 11:27:41 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 08:34:00 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define WRITE 1
 # define MINIMUM_ARGS 5
 # define HERE_DOC_MINIMUM_ARGS 6
+# define DELIMITER_POSITION 2
 
 // Error messages
 # define USAGE "Usage: ./pipex input_file cmd1 cmd2 output_file"
