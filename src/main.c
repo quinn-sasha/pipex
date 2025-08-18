@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/17 14:34:34 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 08:22:49 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_comm
       close(pipe_fd[READ]);
       dup2(input_fd, STDIN_FILENO);
       dup2(pipe_fd[WRITE], STDOUT_FILENO);
-      execute(program_args.commands[i], program_args.environ, &pids);
+      execute(program_args.commands[i], program_args.environ, pids);
     }
     close(pipe_fd[WRITE]);
     close(input_fd);
@@ -78,7 +78,7 @@ void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_comm
   if (pids[i] == CHILD) {
     dup2(input_fd, STDIN_FILENO);
     dup2(output_file_fd, STDOUT_FILENO);
-    execute(program_args.commands[i], program_args.environ, &pids);
+    execute(program_args.commands[i], program_args.environ, pids);
   }
   close(input_fd);
 }
