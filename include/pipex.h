@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 13:11:27 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 14:09:41 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void handle_error(char *message, int is_customized, int exit_status);
 void handle_error_and_free(char *message, int is_customized, int *pids, int exit_status);
 t_program_args new_program_args(int argc, char **argv, char **environ, int is_heredoc);
 int is_same_string(char *s1, char *s2);
-int open_output_file(char *filename, int is_heredoc);
+// open_wrappers.c
+int	open_output_file(char *filename, int is_heredoc, int *pids);
 int open_input_file(char *filename);
 // main.c
 char *find_path(char *command, char *environ[]);

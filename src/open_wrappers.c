@@ -6,17 +6,22 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 13:14:25 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 13:14:49 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:47:07 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int	open_output_file(char *filename, int is_heredoc)
+int	open_output_file(char *filename, int is_heredoc, int *pids)
 {
+    int fd;
 	if (is_heredoc)
-		return (open(filename, O_CREAT | O_WRONLY | O_APPEND));
-	return (open(filename, O_CREAT | O_WRONLY | O_TRUNC));
+		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
+    else
+        fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+    if (fd == FAILED)
+        handle_error_and_free(filename, FALSE, pids, EXIT_FAILURE);
+    return fd;
 }
 
 int	open_input_file(char *filename)
