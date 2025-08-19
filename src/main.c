@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 18:38:01 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 22:13:00 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	wait_all_children(pid_t *pids, int num_commands)
 int	here_document_to_input_fd(char *delimiter)
 {
 	int		pipe_fd[2];
-	pid_t	pid;
 	char	*line;
 
 	pipe(pipe_fd);
@@ -111,7 +110,7 @@ int	main(int argc, char *argv[], char *environ[])
 	}
 	program_args = new_program_args(argc, argv, environ,
 			program_args.is_heredoc);
-	pids = malloc(program_args.num_commands);
+	pids = malloc(sizeof(pid_t) * program_args.num_commands);
 	set_pipe_and_execute(program_args, pids, input_fd);
 	last_status = wait_all_children(pids, program_args.num_commands);
 	free(pids);

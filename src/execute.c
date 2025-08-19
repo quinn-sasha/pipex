@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:32:30 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 18:33:22 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/20 07:43:25 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	set_pipe_and_execute(t_program_args program_args, pid_t *pids,
 {
 	int	pipe_fd[2];
 	int	i;
-	int	output_fd;
 
 	i = 0;
 	while (i < program_args.num_commands - 1)
