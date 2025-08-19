@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 14:09:41 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 18:32:00 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,13 @@ int is_same_string(char *s1, char *s2);
 // open_wrappers.c
 int	open_output_file(char *filename, int is_heredoc, int *pids);
 int open_input_file(char *filename);
+// execute.c
+void execute(char *command_and_args, char *environ[], pid_t *pids);
+void execute_last_command(t_program_args program_args, int *pids, int input_fd);
+void	set_pipe_and_execute(t_program_args program_args, pid_t *pids, int input_fd);
 // main.c
 char *find_path(char *command, char *environ[]);
-void execute(char *command_and_args, char *environ[], pid_t *pids);
 int wait_all_children(pid_t *pids, int num_commands);
+int	here_document_to_input_fd(char *delimiter);
 
 #endif
