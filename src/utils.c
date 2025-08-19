@@ -5,48 +5,56 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/14 18:44:32 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/14 18:57:59y squinn           ###   ########.fr       */
+/*   Created: 2025/08/19 11:55:34 by squinn            #+#    #+#             */
+/*   Updated: 2025/08/19 11:55:37 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void handle_error(char *message, int is_customized, int exit_status) {
-  if (is_customized)
-    ft_putendl_fd(message, STDERR_FILENO);
-  else
-    perror(message);
-  exit(exit_status);
+void	handle_error(char *message, int is_customized, int exit_status)
+{
+	if (is_customized)
+		ft_putendl_fd(message, STDERR_FILENO);
+	else
+		perror(message);
+	exit(exit_status);
 }
 
-void handle_error_and_free(char *message, int is_customized, pid_t *pids, int exit_status) {
-  if (is_customized)
-    ft_putendl_fd(message, STDERR_FILENO);
-  else
-    perror(message);
-  free(pids);
-  exit(exit_status);
+void	handle_error_and_free(char *message, int is_customized, pid_t *pids,
+		int exit_status)
+{
+	if (is_customized)
+		ft_putendl_fd(message, STDERR_FILENO);
+	else
+		perror(message);
+	free(pids);
+	exit(exit_status);
 }
 
-t_program_args new_program_args(int argc, char **argv, char **environ, int is_heredoc) {
-  t_program_args program_args;
-  program_args.commands = argv + 2 + is_heredoc;
-  program_args.num_commands = argc - (3 + is_heredoc);
-  program_args.environ = environ;
-  program_args.output_file = argv[argc - 1];
-  program_args.is_heredoc = is_heredoc;
-  return program_args;
+t_program_args	new_program_args(int argc, char **argv, char **environ,
+		int is_heredoc)
+{
+	t_program_args	program_args;
+
+	program_args.commands = argv + 2 + is_heredoc;
+	program_args.num_commands = argc - (3 + is_heredoc);
+	program_args.environ = environ;
+	program_args.output_file = argv[argc - 1];
+	program_args.is_heredoc = is_heredoc;
+	return (program_args);
 }
 
-int is_same_string(char *s1, char *s2) {
-  if (ft_strlen(s1) != ft_strlen(s2))
-    return FALSE;
-  return ft_strncmp(s1, s2, ft_strlen(s1)) == 0;
+int	is_same_string(char *s1, char *s2)
+{
+	if (ft_strlen(s1) != ft_strlen(s2))
+		return (FALSE);
+	return (ft_strncmp(s1, s2, ft_strlen(s1)) == 0);
 }
 
-int open_output_file(char *filename, int is_heredoc) {
-  if (is_heredoc)
-    return open(filename, O_CREAT | O_WRONLY | O_APPEND);
-  return open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+int	open_output_file(char *filename, int is_heredoc)
+{
+	if (is_heredoc)
+		return (open(filename, O_CREAT | O_WRONLY | O_APPEND));
+	return (open(filename, O_CREAT | O_WRONLY | O_TRUNC));
 }
