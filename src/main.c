@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 10:33:01 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 10:59:22 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char *find_path(char *command, char *environ[]) {
 }
 
 // It can only execute shell command.
+// Assume command and arguments are splited by space.
 void execute(char *command_and_args, char *environ[], pid_t *pids) {
   char **argv = ft_split(command_and_args, ' ');
   char *path = find_path(argv[0], environ);
@@ -107,6 +108,7 @@ int here_document_to_input_fd(char *delimiter) {
   if (pid == CHILD) {
     close(pipe_fd[READ]);
     while (TRUE) {
+      ft_putstr_fd("pipe heredoc> ", STDOUT_FILENO);
       char *line = get_next_line(STDIN_FILENO);
       if (is_same_string(line, delimiter)) {
         free(line);
