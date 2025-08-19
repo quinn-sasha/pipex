@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 08:38:54 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:01:53 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,13 @@ void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_comm
     input_fd = pipe_fd[READ];
     i++;
   }
-  int output_file_fd = open(program_args.output_file, O_CREAT | O_TRUNC | O_WRONLY);
-  if (output_file_fd == FAILED)
+  int output_fd = open_output_file(program_args.output_file, program_args.is_heredoc);
+  if (output_fd == FAILED)
     handle_error_and_free(program_args.output_file, FALSE, pids, EXIT_FAILURE);
   pids[i] = fork();
   if (pids[i] == CHILD) {
     dup2(input_fd, STDIN_FILENO);
-    dup2(output_file_fd, STDOUT_FILENO);
+    dup2(output_fd, STDOUT_FILENO);
     execute(program_args.commands[i], program_args.environ, pids);
   }
   close(input_fd);
@@ -139,7 +139,6 @@ int main(int argc, char *argv[], char *environ[]) {
   }
   int num_commands = argc - (3 + is_heredoc);
   t_program_args program_args = new_program_args(argc, argv, environ, is_heredoc);
-  int output_fd = open_wrapper(); // TODO
   pid_t *pids = malloc(num_commands);
 
   set_pipe_and_execute(program_args, pids, num_commands, input_fd);
