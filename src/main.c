@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 09:08:43 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:18:16 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ void execute(char *command_and_args, char *environ[], pid_t *pids) {
   execve(path, argv, environ);
 }
 
-void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int num_commands, int input_fd) {
+void set_pipe_and_execute(t_program_args program_args, pid_t *pids, int input_fd) {
   int pipe_fd[2];
   int i = 0;
-  while (i < num_commands - 1) {
+  while (i < program_args.num_commands - 1) {
     if (pipe(pipe_fd) == FAILED)
       handle_error_and_free(PIPE_ERROR, FALSE, pids, EXIT_FAILURE);
     pids[i] = fork();
@@ -138,13 +138,12 @@ int main(int argc, char *argv[], char *environ[]) {
       handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
     input_fd = here_document_to_input_fd(argv[DELIMITER_POSITION]);
   }
-  int num_commands = argc - (3 + is_heredoc);
   t_program_args program_args = new_program_args(argc, argv, environ, is_heredoc);
-  pid_t *pids = malloc(num_commands);
+  pid_t *pids = malloc(program_args.num_commands);
 
-  set_pipe_and_execute(program_args, pids, num_commands, input_fd);
+  set_pipe_and_execute(program_args, pids, input_fd);
   int last_status;
-  last_status = wait_all_children(pids, num_commands);
+  last_status = wait_all_children(pids, program_args.num_commands);
   free(pids);
   exit(last_status);
 }

@@ -32,6 +32,7 @@ void handle_error_and_free(char *message, int is_customized, pid_t *pids, int ex
 t_program_args new_program_args(int argc, char **argv, char **environ, int is_heredoc) {
   t_program_args program_args;
   program_args.commands = argv + 2 + is_heredoc;
+  program_args.num_commands = argc - (3 + is_heredoc);
   program_args.environ = environ;
   program_args.output_file = argv[argc - 1];
   program_args.is_heredoc = is_heredoc;

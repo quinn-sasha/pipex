@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:18:42 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 08:57:19 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:15:22 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 
 typedef struct s_program_args {
   char **commands;
+  int num_commands;
   char **environ;
   char *output_file;
   int is_heredoc;
