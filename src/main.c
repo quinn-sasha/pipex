@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 09:01:53 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 09:08:43 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,15 +127,16 @@ int main(int argc, char *argv[], char *environ[]) {
     handle_error(USAGE, TRUE, EXIT_FAILURE);
   int input_fd;
   int is_heredoc = FALSE;
-  if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0) {
+  if (!is_same_string(argv[1], "here_doc")) {
+    input_fd = open(argv[1], O_RDONLY);
+    if (input_fd == FAILED)
+      handle_error(argv[1], FALSE, EXIT_FAILURE);
+  }
+  else {
     is_heredoc = TRUE;
     if (argc < HERE_DOC_MINIMUM_ARGS)
       handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
     input_fd = here_document_to_input_fd(argv[DELIMITER_POSITION]);
-  } else {
-    input_fd = open(argv[1], O_RDONLY);
-    if (input_fd == FAILED)
-      handle_error(argv[1], FALSE, EXIT_FAILURE);
   }
   int num_commands = argc - (3 + is_heredoc);
   t_program_args program_args = new_program_args(argc, argv, environ, is_heredoc);
