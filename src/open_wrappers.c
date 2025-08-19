@@ -14,14 +14,15 @@
 
 int	open_output_file(char *filename, int is_heredoc, int *pids)
 {
-    int fd;
+	int	fd;
+
 	if (is_heredoc)
 		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
-    else
-        fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
-    if (fd == FAILED)
-        handle_error_and_free(filename, FALSE, pids, EXIT_FAILURE);
-    return fd;
+	else
+		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+	if (fd == FAILED)
+		handle_error_and_free(filename, FALSE, pids, EXIT_FAILURE);
+	return (fd);
 }
 
 int	open_input_file(char *filename)

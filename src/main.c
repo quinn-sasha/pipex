@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 18:33:00 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 18:38:01 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,9 @@ int	main(int argc, char *argv[], char *environ[])
 
 	if (argc < MINIMUM_ARGS)
 		handle_error(USAGE, TRUE, EXIT_FAILURE);
+	program_args.is_heredoc = FALSE;
 	if (!is_same_string(argv[1], "here_doc"))
-	{
-		program_args.is_heredoc = FALSE;
 		input_fd = open_input_file(argv[1]);
-	}
 	else
 	{
 		program_args.is_heredoc = TRUE;

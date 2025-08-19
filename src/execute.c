@@ -37,16 +37,23 @@ void	execute(char *command_and_args, char *environ[], pid_t *pids)
 	execve(path, argv, environ);
 }
 
-void execute_last_command(t_program_args program_args, int *pids, int input_fd) {
-  int output_fd = open_output_file(program_args.output_file, program_args.is_heredoc, pids);
-  int index = program_args.num_commands - 1;
-  pids[index] = fork();
-  if (pids[index] == CHILD) {
-    dup2(input_fd, STDIN_FILENO);
-    dup2(output_fd, STDOUT_FILENO);
-    execute(program_args.commands[index], program_args.environ, pids);
-  }
-  close(input_fd);
+void	execute_last_command(t_program_args program_args, int *pids,
+		int input_fd)
+{
+	int	output_fd;
+	int	index;
+
+	output_fd = open_output_file(program_args.output_file,
+			program_args.is_heredoc, pids);
+	index = program_args.num_commands - 1;
+	pids[index] = fork();
+	if (pids[index] == CHILD)
+	{
+		dup2(input_fd, STDIN_FILENO);
+		dup2(output_fd, STDOUT_FILENO);
+		execute(program_args.commands[index], program_args.environ, pids);
+	}
+	close(input_fd);
 }
 
 void	set_pipe_and_execute(t_program_args program_args, pid_t *pids,
@@ -74,5 +81,5 @@ void	set_pipe_and_execute(t_program_args program_args, pid_t *pids,
 		input_fd = pipe_fd[READ];
 		i++;
 	}
-  execute_last_command(program_args, pids, input_fd);
+	execute_last_command(program_args, pids, input_fd);
 }
