@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 11:55:34 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 13:04:44 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/19 13:14:12 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,4 @@ int	is_same_string(char *s1, char *s2)
 	if (ft_strlen(s1) != ft_strlen(s2))
 		return (FALSE);
 	return (ft_strncmp(s1, s2, ft_strlen(s1)) == 0);
-}
-
-int	open_output_file(char *filename, int is_heredoc)
-{
-	if (is_heredoc)
-		return (open(filename, O_CREAT | O_WRONLY | O_APPEND));
-	return (open(filename, O_CREAT | O_WRONLY | O_TRUNC));
 }
