@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 18:20:46 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 22:13:00 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:17:00 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*find_path(char *command, char *environ[])
 	char	*path;
 
 	i = 0;
-	while (!is_same_string(environ[i], "PATH"))
+	while (ft_strncmp(environ[i], "PATH", ft_strlen("PATH")) != 0)
 		i++;
 	paths = ft_split(environ[i] + ft_strlen("PATH="), ':');
 	i = -1;
@@ -91,6 +91,7 @@ int	here_document_to_input_fd(char *delimiter)
 
 int	main(int argc, char *argv[], char *environ[])
 {
+	int				is_heredoc;
 	int				input_fd;
 	t_program_args	program_args;
 	pid_t			*pids;
@@ -98,18 +99,17 @@ int	main(int argc, char *argv[], char *environ[])
 
 	if (argc < MINIMUM_ARGS)
 		handle_error(USAGE, TRUE, EXIT_FAILURE);
-	program_args.is_heredoc = FALSE;
+	is_heredoc = FALSE;
 	if (!is_same_string(argv[1], "here_doc"))
 		input_fd = open_input_file(argv[1]);
 	else
 	{
-		program_args.is_heredoc = TRUE;
+		is_heredoc = TRUE;
 		if (argc < HERE_DOC_MINIMUM_ARGS)
 			handle_error(HERE_DOC_USAGE, TRUE, EXIT_FAILURE);
 		input_fd = here_document_to_input_fd(argv[DELIMITER_POSITION]);
 	}
-	program_args = new_program_args(argc, argv, environ,
-			program_args.is_heredoc);
+	program_args = new_program_args(argc, argv, environ, is_heredoc);
 	pids = malloc(sizeof(pid_t) * program_args.num_commands);
 	set_pipe_and_execute(program_args, pids, input_fd);
 	last_status = wait_all_children(pids, program_args.num_commands);
