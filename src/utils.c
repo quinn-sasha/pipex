@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 11:55:34 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/19 13:14:12 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/20 09:17:29 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_program_args	new_program_args(int argc, char **argv, char **environ,
 	program_args.num_commands = argc - (3 + is_heredoc);
 	program_args.environ = environ;
 	program_args.output_file = argv[argc - 1];
+	program_args.is_heredoc = is_heredoc;
 	return (program_args);
 }
 
