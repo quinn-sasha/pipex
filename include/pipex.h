@@ -12,15 +12,15 @@
 
 #ifndef PIPEX_H
 # define PIPEX_H
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include "../libft/libft.h"
+# include "../libft/libft.h"
+# include <errno.h>
+# include <fcntl.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <unistd.h>
 
 # define CHILD 0
 # define READ 0
@@ -41,29 +41,34 @@
 # define CMD_NOT_FOUND_CODE 127
 # define PERMISSION_DENIED_CODE 126
 
-typedef struct s_program_args {
-  char **commands;
-  int num_commands;
-  char **environ;
-  char *output_file;
-  int is_heredoc;
-} t_program_args;
+typedef struct s_program_args
+{
+	char		**commands;
+	int			num_commands;
+	char		**environ;
+	char		*output_file;
+	int			is_heredoc;
+}				t_program_args;
 
 // utils.c
-void handle_error(char *message, int is_customized, int exit_status);
-void handle_error_and_free(char *message, int is_customized, int *pids, int exit_status);
-t_program_args new_program_args(int argc, char **argv, char **environ, int is_heredoc);
-int is_same_string(char *s1, char *s2);
+void			handle_error(char *message, int is_customized, int exit_status);
+void			handle_error_and_free(char *message, int is_customized,
+					int *pids, int exit_status);
+t_program_args	new_program_args(int argc, char **argv, char **environ,
+					int is_heredoc);
+int				is_same_string(char *s1, char *s2);
 // open_wrappers.c
-int	open_output_file(char *filename, int is_heredoc, int *pids);
-int open_input_file(char *filename);
+int				open_output_file(char *filename, int is_heredoc, int *pids);
+int				open_input_file(char *filename);
 // execute.c
-void execute(char *command_and_args, char *environ[], pid_t *pids);
-void execute_last_command(t_program_args program_args, int *pids, int input_fd);
-void	set_pipe_and_execute(t_program_args program_args, pid_t *pids, int input_fd);
+void			execute(char *command_and_args, char *environ[], pid_t *pids);
+void			execute_last_command(t_program_args program_args, int *pids,
+					int input_fd);
+void			set_pipe_and_execute(t_program_args program_args, pid_t *pids,
+					int input_fd);
 // main.c
-char *find_path(char *command, char *environ[]);
-int wait_all_children(pid_t *pids, int num_commands);
-int	here_document_to_input_fd(char *delimiter);
+char			*find_path(char *command, char *environ[]);
+int				wait_all_children(pid_t *pids, int num_commands);
+int				here_document_to_input_fd(char *delimiter);
 
 #endif
