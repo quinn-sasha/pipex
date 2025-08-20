@@ -6,7 +6,7 @@
 /*   By: squinn <squinn@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:32:30 by squinn            #+#    #+#             */
-/*   Updated: 2025/08/20 09:27:32 by squinn           ###   ########.fr       */
+/*   Updated: 2025/08/20 11:11:40 by squinn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ void	execute(char *command_and_args, char *environ[], pid_t *pids)
 	char	*path;
 
 	argv = ft_split(command_and_args, ' ');
+	if (argv[0] == NULL)
+	{
+		free_words(argv);
+		handle_error_and_free(CMD_NOT_FOUND_ERROR, TRUE, pids,
+			CMD_NOT_FOUND_CODE);
+	}
 	path = find_path(argv[0], environ);
 	if (path == NULL)
 	{
