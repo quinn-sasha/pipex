@@ -104,8 +104,7 @@ test test5
 CMD1="cat"
 CMD2="          " # space and tab
 test test6
-# exit status: (zsh: 126, bash: 127)
-# I think this test's expected status is incorrect.
+# exit status: (zsh: 126, bash: 0)
 CMD1="cat"
 CMD2=""
 test test7
